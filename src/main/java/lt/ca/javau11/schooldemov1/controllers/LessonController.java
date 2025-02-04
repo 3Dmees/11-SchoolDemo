@@ -1,14 +1,15 @@
 package lt.ca.javau11.schooldemov1.controllers;
 
+import lt.ca.javau11.schooldemov1.controllers.DTO.LessonDTO;
 import lt.ca.javau11.schooldemov1.entities.Lesson;
 import lt.ca.javau11.schooldemov1.services.LessonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/lessons")
@@ -54,8 +55,11 @@ public class LessonController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Lesson>> getAllLessons(){
-        List<Lesson> allLessons = lessonService.getAllLessons();
-        return new ResponseEntity<>(allLessons, HttpStatus.OK);
+    public ResponseEntity<List<LessonDTO>> getAllLessons() {
+        List<Lesson> lessons = lessonService.getAllLessons();
+        List<LessonDTO> lessonDTOs = lessons.stream()
+                .map(LessonDTO::new)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(lessonDTOs, HttpStatus.OK);
     }
 }
